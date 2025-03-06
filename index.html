@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Security Scanner</title>
+    <script>
+        function scanNetwork() {
+            let network = document.getElementById("network").value;
+            fetch("/scan", {
+                method: "POST",
+                body: new URLSearchParams({ "network": network }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultDiv = document.getElementById("results");
+                resultDiv.innerHTML = "<h3>Scan Results:</h3>";
+                data.forEach(device => {
+                    resultDiv.innerHTML += `<p><b>IP:</b> ${device.IP} | <b>MAC:</b> ${device.MAC} | <b>Risk Score:</b> ${device["Risk Score"]}/10</p>`;
+                });
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>IoT Security Scanner</h1>
+    <input type="text" id="network" placeholder="Enter Network (e.g., 192.168.1.1/24)">
+    <button onclick="scanNetwork()">Start Scan</button>
+    <div id="results"></div>
+</body>
+</html>
